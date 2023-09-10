@@ -1,0 +1,71 @@
+class Node:
+    def _init_(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
+class DoublyLinkedList:
+    def _init_(self):
+        self.head = Node(None)  # Sentinel node for the head
+        self.tail = Node(None)  # Sentinel node for the tail
+        self.head.next = self.tail
+        self.tail.prev = self.head
+    def insert_at_beginning(self, data):
+        new_node = Node(data)
+        new_node.next = self.head.next
+        self.head.next.prev = new_node
+        self.head.next = new_node
+        new_node.prev = self.head
+    def insert_at_end(self, data):
+        new_node = Node(data)
+        new_node.prev = self.tail.prev
+        self.tail.prev.next = new_node
+        self.tail.prev = new_node
+        new_node.next = self.tail
+    def insert_at_position(self, data, position):
+        if position < 1:
+            print("Invalid position")
+            return
+        new_node = Node(data)
+        current = self.head
+        count = 0
+        while current.next != self.tail and count < position - 1:
+            current = current.next
+            count += 1
+        if count == position - 1:
+            new_node.next = current.next
+            current.next.prev = new_node
+            current.next = new_node
+            new_node.prev = current
+        else:
+            print("Position out of range")
+    def delete_by_value(self, data):
+        current = self.head.next
+        while current != self.tail:
+            if current.data == data:
+                current.prev.next = current.next
+                current.next.prev = current.prev
+                return
+            current = current.next
+        print(f"{data} not found in the list")
+    def print_forward(self):
+        current = self.head.next
+        while current != self.tail:
+            print(current.data, end=" <-> ")
+            current = current.next
+        print("None")
+    def print_backward(self):
+        current = self.tail.prev
+        while current != self.head:
+            print(current.data, end=" <-> ")
+            current = current.prev
+        print("None")
+if _name_ == "__main__":
+    dll = DoublyLinkedList()
+    dll.insert_at_beginning(2)
+    dll.insert_at_beginning(1)
+    dll.insert_at_end(3)
+    dll.insert_at_position(4, 2)
+    dll.print_forward()
+    dll.print_backward()
+    dll.delete_by_value(2)
+    dll.print_forward()
